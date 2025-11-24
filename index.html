@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>تطبيق ياسر — ملف واحد</title>
+  <meta name="description" content="PWA في ملف واحد: HTML+CSS+JS مع تثبيت وأوفلاين" />
+  <meta name="theme-color" content="#0078d7" />
+
+  <style>
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --primary:#0078d7;
+      --accent:#60a5fa;
+      --success:#22c55e;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,Segoe UI,Roboto,Ubuntu,"Noto Sans Arabic",sans-serif;
+      background:linear-gradient(160deg,#0b1220 0%, #0f172a 50%, #0b1220 100%);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .app{
+      width:min(920px,92vw);
+      padding:28px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      backdrop-filter:saturate(1.2) blur(6px);
+      box-shadow:
+        0 30px 60px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo{
+      width:40px;height:40px;border-radius:12px;
+      background:conic-gradient(from 210deg at 50% 50%, #0ea5e9, #3b82f6, #6366f1, #0ea5e9);
+      box-shadow:0 10px 24px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
+      position:relative;
+    }
+    .logo::after{
+      content:""; position:absolute; inset:6px;
+      border-radius:9px;
+      background:radial-gradient(120px 80px at 50% 30%, rgba(255,255,255,0.35), transparent 60%);
+    }
+    .title{
+      font-weight:800;letter-spacing:0.2px;font-size:1.25rem;
+    }
+    .muted{color:var(--muted);font-size:0.92rem}
+    .grid{
+      display:grid;gap:14px;
+      grid-template-columns:repeat(12,1fr);
+    }
+    .card{
+      grid-column:span 12;
+      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:16px;
+      padding:18px;
+    }
+    @media(min-width:780px){
+      .card{grid-column:span 6}
+    }
+    .card h3{margin:0 0 8px 0;font-size:1.05rem}
+    .card p{margin:0 0 12px 0;color:var(--muted)}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{
+      appearance:none;border:none;outline:none;cursor:pointer;
+      padding:12px 16px;border-radius:12px;font-weight:700;
+      color:white; background:linear-gradient(180deg,#0ea5e9,#3b82f6);
+      box-shadow:0 10px 24px rgba(14,165,233,0.35);
+      transition:transform .12s ease, box-shadow .12s ease, filter .2s ease;
+    }
+    .btn:hover{transform:translateY(-1px); filter:saturate(1.1)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{
+      background:linear-gradient(180deg,#374151,#1f2937);
+      box-shadow:none; color:#e5e7eb;
+      border:1px solid rgba(255,255,255,0.08);
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      background:rgba(96,165,250,0.12); color:#bfdbfe;
+      border:1px dashed rgba(96,165,250,0.35);
+      font-weight:600;
+    }
+    .status{
+      margin-top:10px; color:#a7f3d0; display:flex; align-items:center; gap:8px;
+    }
+    .dot{
+      width:8px;height:8px;border-radius:50%; background:var(--success);
+      box-shadow:0 0 0 6px rgba(34,197,94,0.12);
+    }
+    .footer{
+      margin-top:16px; text-align:center; color:var(--muted); font-size:0.9rem;
+    }
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "DejaVu Sans Mono", monospace}
+    .code{
+      padding:12px;border-radius:12px;background:rgba(2,6,23,0.6);
+      border:1px solid rgba(255,255,255,0.08); overflow:auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <div class="title">تطبيق ياسر — ملف واحد</div>
+          <div class="muted">PWA قابل للتثبيت + أوفلاين + واجهة أنيقة</div>
+        </div>
+      </div>
+      <button id="installBtn" class="btn">تثبيت التطبيق</button>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h3>عن التطبيق</h3>
+        <p>ملف واحد فقط يحتوي على كل شيء: الواجهة، الـ Service Worker، والـ Manifest، مع إنشاء أيقونات ديناميكيًا.</p>
+        <div class="actions">
+          <button id="pingBtn" class="btn secondary">تشغيل مهمة محلية</button>
+          <button id="clearCacheBtn" class="btn secondary">مسح الكاش</button>
+        </div>
+        <div id="status" class="status"><span class="dot"></span> جاهز للتثبيت</div>
+      </section>
+
+      <section class="card">
+        <h3>كيف يعمل؟</h3>
+        <p>ننشئ الـ Manifest والأيقونات وملف الـ Service Worker داخل الصفحة باستخدام Blob URLs، ثم نسجل الـ SW ونفعل التثبيت.</p>
+        <div class="code mono" id="log"></div>
+      </section>
+    </div>
+
+    <div class="footer">مصمم بروح منتجات مايكروسوفت: ألوان نظيفة، أنيميشن خفيفة، وتجربة سلسة.</div>
+  </main>
+
+<script>
+(function(){
+  const logEl = document.getElementById('log');
+  const statusEl = document.getElementById('status');
+  const installBtn = document.getElementById('installBtn');
+  const pingBtn = document.getElementById('pingBtn');
+  const clearCacheBtn = document.getElementById('clearCacheBtn');
+  let deferredPrompt = null;
+
+  const log = (msg) => {
+    const time = new Date().toLocaleTimeString();
+    logEl.textContent += `[${time}] ${msg}\n`;
+    logEl.scrollTop = logEl.scrollHeight;
+    console.log(msg);
+  };
+
+  // 1) توليد أيقونات PNG ديناميكيًا عبر Canvas
+  async function createIcon(size){
+    const canvas = document.createElement('canvas');
+    canvas.width = size; canvas.height = size;
+    const ctx = canvas.getContext('2d');
+
+    // خلفية دائرية بتدرج
+    const grad = ctx.createConicGradient(Math.PI*0.6, size/2, size/2);
+    grad.addColorStop(0.00, '#0ea5e9');
+    grad.addColorStop(0.33, '#3b82f6');
+    grad.addColorStop(0.66, '#6366f1');
+    grad.addColorStop(1.00, '#0ea5e9');
+    ctx.fillStyle = grad;
+    const r = size*0.42;
+    ctx.beginPath(); ctx.arc(size/2, size/2, r, 0, Math.PI*2); ctx.fill();
+
+    // حرف Y بسيط
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = Math.max(6, size*0.06);
+    const cx = size/2, cy = size/2;
+    ctx.beginPath();
+    ctx.moveTo(cx - r*0.5, cy - r*0.4);
+    ctx.lineTo(cx, cy);
+    ctx.lineTo(cx, cy + r*0.55);
+    ctx.moveTo(cx + r*0.5, cy - r*0.4);
+    ctx.lineTo(cx, cy);
+    ctx.stroke();
+
+    const blob = await new Promise(res => canvas.toBlob(res, 'image/png'));
+    return URL.createObjectURL(blob);
+  }
+
+  // 2) إنشاء Manifest ككائن ثم تحويله إلى Blob URL
+  async function setupManifest(){
+    const icon192 = await createIcon(192);
+    const icon512 = await createIcon(512);
+    const manifest = {
+      name: "Yasser App — One File",
+      short_name: "YApp",
+      start_url: "./",
+      scope: "./",
+      display: "standalone",
+      background_color: "#ffffff",
+      theme_color: "#0078d7",
+      icons: [
+        { src: icon192, sizes: "192x192", type: "image/png", purpose: "any" },
+        { src: icon512, sizes: "512x512", type: "image/png", purpose: "any" }
+      ]
+    };
+    const blob = new Blob([JSON.stringify(manifest, null, 2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = url;
+    document.head.appendChild(link);
+    log('Manifest جاهز ومرفق بالصفحة');
+  }
+
+  // 3) إنشاء Service Worker ديناميكيًا وتسجيله
+  async function setupServiceWorker(){
+    if(!('serviceWorker' in navigator)){
+      log('المتصفح لا يدعم Service Worker');
+      return;
+    }
+    const swCode = `
+      const CACHE = 'yasser-onefile-v1';
+      const CORE = ['/', '']; // سيتم اعتراض الطلبات وإرجاع المخزن إذا توفر
+      self.addEventListener('install', e => {
+        e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)));
+        self.skipWaiting();
+      });
+      self.addEventListener('activate', e => {
+        e.waitUntil(
+          caches.keys().then(keys => Promise.all(
+            keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+          ))
+        );
+        self.clients.claim();
+      });
+      self.addEventListener('fetch', e => {
+        const req = e.request;
+        // استراتيجية: Cache, then Network
+        e.respondWith(
+          caches.match(req).then(cached => {
+            const fetchPromise = fetch(req).then(res => {
+              const copy = res.clone();
+              caches.open(CACHE).then(c => c.put(req, copy)).catch(()=>{});
+              return res;
+            }).catch(() => cached || Promise.reject('offline'));
+            return cached || fetchPromise;
+          })
+        );
+      });
+    `;
+    const blob = new Blob([swCode], {type:'application/javascript'});
+    const swUrl = URL.createObjectURL(blob);
+    const reg = await navigator.serviceWorker.register(swUrl, {scope: './'});
+    log('Service Worker تم تسجيله');
+    return reg;
+  }
+
+  // 4) التعامل مع beforeinstallprompt لتفعيل زر التثبيت
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    statusEl.innerHTML = '<span class="dot"></span> جاهز للتثبيت — اضغط الزر بالأعلى';
+    log('beforeinstallprompt: أصبح التثبيت متاحاً');
+  });
+
+  installBtn.addEventListener('click', async () => {
+    if(deferredPrompt){
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      log('نتيجة التثبيت: ' + outcome);
+      deferredPrompt = null;
+    } else {
+      alert('إذا لم يظهر لك الحوار: جرّب إضافة الصفحة إلى الشاشة الرئيسية أو أيقونة التثبيت من المتصفح.');
+      log('زر التثبيت: لا توجد إشارة beforeinstallprompt حالياً');
+    }
+  });
+
+  // أزرار تجريبية
+  pingBtn.addEventListener('click', () => {
+    log('تشغيل مهمة: حساب مجموع سريع');
+    // مثال مهمة محلية
+    const sum = Array.from({length: 10000}, (_,i)=>i).reduce((a,b)=>a+b,0);
+    log('تم — النتيجة: ' + sum);
+  });
+
+  clearCacheBtn.addEventListener('click', async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+    log('تم مسح الكاش بالكامل');
+    alert('تم مسح الكاش. قد تحتاج لإعادة التحميل.');
+  });
+
+  // تشغيل الإعدادات بالتسلسل
+  (async function boot(){
+    await setupManifest();
+    await setupServiceWorker();
+    log('جاهز — أعد تحميل الصفحة إذا أردت اختبار الأوفلاين بعد زيارة بعض العناصر.');
+  })();
+})();
+</script>
+</body>
+</html>
